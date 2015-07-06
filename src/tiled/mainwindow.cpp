@@ -290,7 +290,7 @@ MainWindow::MainWindow(QWidget *parent, Qt::WindowFlags flags)
     mLayerMenu->addSeparator();
     mLayerMenu->addAction(mActionHandler->actionLayerProperties());
 
-    menuBar()->insertMenu(mUi->menuHelp->menuAction(), mLayerMenu);
+    menuBar()->insertMenu(mUi->menuProject->menuAction(), mLayerMenu);
 
     connect(mUi->actionNew, SIGNAL(triggered()), SLOT(newMap()));
     connect(mUi->actionOpen, SIGNAL(triggered()), SLOT(openFile()));
@@ -378,6 +378,10 @@ MainWindow::MainWindow(QWidget *parent, Qt::WindowFlags flags)
     setThemeIcon(mUi->actionNewTileset, "document-new");
     setThemeIcon(mUi->actionResizeMap, "document-page-setup");
     setThemeIcon(mUi->actionMapProperties, "document-properties");
+    setThemeIcon(mUi->actionOpenProject, "document-open");
+    setThemeIcon(mUi->menuRecentProjects, "document-open-recent");
+    setThemeIcon(mUi->actionClearRecentProjects, "edit-clear");
+    setThemeIcon(mUi->actionCloseProject, "window-close");
     setThemeIcon(mUi->actionAbout, "help-about");
 
     mStampBrush = new StampBrush(this);

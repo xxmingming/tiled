@@ -28,6 +28,7 @@
 #include "mapreader.h"
 #include "mapwriterinterface.h"
 #include "preferences.h"
+#include "project.h"
 #include "tiledapplication.h"
 #include "tileset.h"
 
@@ -277,6 +278,9 @@ int main(int argc, char *argv[])
     } else if (Preferences::instance()->openLastFilesOnStartup()) {
         w.openLastFiles();
     }
+
+    Project::current()->load("/home/bjorn/test.tiled");
+    Project::current()->save("/home/bjorn/test.tiled");
 
     return a.exec();
 }

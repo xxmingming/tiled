@@ -222,6 +222,8 @@ QtGuiApplication {
         "preferencesdialog.h",
         "preferencesdialog.ui",
         "preferences.h",
+        "project.cpp",
+        "project.h",
         "propertiesdock.cpp",
         "propertiesdock.h",
         "propertybrowser.cpp",
