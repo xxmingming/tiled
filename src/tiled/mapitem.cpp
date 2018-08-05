@@ -34,13 +34,17 @@
 #include "tilelayer.h"
 #include "tilelayeritem.h"
 #include "tileselectionitem.h"
+#include "utils.h"
 #include "zoomable.h"
 
 #include <QCursor>
 #include <QGraphicsSceneMouseEvent>
+#include <QGuiApplication>
 #include <QPen>
 #include <QStyleOptionGraphicsItem>
 #include <QWidget>
+
+#include <QDebug>
 
 #include "qtcompat_p.h"
 
@@ -113,6 +117,7 @@ MapItem::MapItem(const MapDocumentPtr &mapDocument, DisplayMode displayMode,
     : QGraphicsObject(parent)
     , mMapDocument(mapDocument)
     , mDarkRectangle(new QGraphicsRectItem(this))
+    , mBorderRectangle(new QGraphicsRectItem(this))
     , mDisplayMode(Editable)
 {
     // Since we don't do any painting, we can spare us the call to paint()
@@ -170,6 +175,13 @@ MapItem::MapItem(const MapDocumentPtr &mapDocument, DisplayMode displayMode,
         mObjectSelectionItem.reset(new ObjectSelectionItem(mapDocument.data(), this));
         mObjectSelectionItem->setZValue(10000 - 1);
     }
+
+    QColor gridColor = Preferences::instance()->gridColor();
+    QPen pen(gridColor);
+    pen.setCosmetic(true);
+
+    mBorderRectangle->setZValue(10000 - 3);
+    mBorderRectangle->setPen(pen);
 }
 
 MapItem::~MapItem()
@@ -182,6 +194,8 @@ void MapItem::setDisplayMode(DisplayMode displayMode)
         return;
 
     mDisplayMode = displayMode;
+
+    setAcceptHoverEvents(displayMode == ReadOnly);
 
     // Enabled state is checked by selection tools
     for (LayerItem *layerItem : qAsConst(mLayerItems))
@@ -223,6 +237,29 @@ QRectF MapItem::boundingRect() const
 
 void MapItem::paint(QPainter *, const QStyleOptionGraphicsItem *, QWidget *)
 {
+}
+
+void MapItem::hoverEnterEvent(QGraphicsSceneHoverEvent *)
+{
+    QColor highlightColor = QGuiApplication::palette().highlight().color();
+    QPen pen(highlightColor);
+    pen.setCosmetic(true);
+
+    QColor brush(highlightColor);
+    brush.setAlpha(64);
+
+    mBorderRectangle->setPen(pen);
+    mBorderRectangle->setBrush(brush);
+}
+
+void MapItem::hoverLeaveEvent(QGraphicsSceneHoverEvent *)
+{
+    QColor gridColor = Preferences::instance()->gridColor();
+    QPen pen(gridColor);
+    pen.setCosmetic(true);
+
+    mBorderRectangle->setPen(pen);
+    mBorderRectangle->setBrush(Qt::NoBrush);
 }
 
 void MapItem::mousePressEvent(QGraphicsSceneMouseEvent *event)
@@ -621,6 +658,8 @@ void MapItem::updateBoundingRect()
         prepareGeometryChange();
         mBoundingRect = boundingRect;
         emit boundingRectChanged();
+
+        mBorderRectangle->setRect(mBoundingRect);
     }
 }
 
