@@ -173,6 +173,7 @@ SOURCES += aboutdialog.cpp \
     movemapobjecttogroup.cpp \
     moveterrain.cpp \
     newmapdialog.cpp \
+    newsfeed.cpp \
     newtilesetdialog.cpp \
     noeditorwidget.cpp \
     objectgroupitem.cpp \
@@ -370,6 +371,7 @@ HEADERS += aboutdialog.h \
     movemapobjecttogroup.h \
     moveterrain.h \
     newmapdialog.h \
+    newsfeed.h \
     newtilesetdialog.h \
     noeditorwidget.h \
     objectgroupitem.h \

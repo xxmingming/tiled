@@ -46,6 +46,7 @@
 #include "mapsdock.h"
 #include "mapview.h"
 #include "minimapdock.h"
+#include "newsfeed.h"
 #include "newtilesetdialog.h"
 #include "objectgroup.h"
 #include "objectsdock.h"
@@ -80,11 +81,13 @@
 #include "zoomable.h"
 
 #include <QComboBox>
+#include <QDesktopServices>
 #include <QDialogButtonBox>
 #include <QHBoxLayout>
 #include <QIdentityProxyModel>
 #include <QLabel>
 #include <QMainWindow>
+#include <QMenu>
 #include <QMessageBox>
 #include <QScrollBar>
 #include <QSettings>
@@ -226,8 +229,35 @@ MapEditor::MapEditor(QObject *parent)
     connect(mLayerComboBox, static_cast<void (QComboBox::*)(int)>(&QComboBox::activated),
             this, &MapEditor::layerComboActivated);
 
+    auto newsFeedButton = new QToolButton;
+    auto newsFeedMenu = new QMenu(newsFeedButton);
+    newsFeedButton->setMenu(newsFeedMenu);
+    newsFeedButton->setPopupMode(QToolButton::InstantPopup);
+    newsFeedButton->setText(tr("News"));
+    newsFeedButton->setAutoRaise(true);
+    connect(newsFeedMenu, &QMenu::aboutToShow,
+            this, [=] {
+        newsFeedMenu->clear();
+        for (const NewsItem &newsItem : NewsFeed::instance().newsItems()) {
+            auto action = newsFeedMenu->addAction(newsItem.title);
+            connect(action, &QAction::triggered, [=] {
+                QDesktopServices::openUrl(newsItem.link);
+                NewsFeed::instance().markRead(newsItem);
+            });
+        }
+    });
+    connect(&NewsFeed::instance(), &NewsFeed::refreshed,
+            this, [=] {
+        auto unreadCount = NewsFeed::instance().unreadCount();
+        if (unreadCount > 0)
+            newsFeedButton->setText(tr("News (%1)").arg(unreadCount));
+        else
+            newsFeedButton->setText(tr("News"));
+    });
+
     mMainWindow->statusBar()->addPermanentWidget(mLayerComboBox);
     mMainWindow->statusBar()->addPermanentWidget(mZoomComboBox);
+    mMainWindow->statusBar()->addPermanentWidget(newsFeedButton);
     mMainWindow->statusBar()->addWidget(mStatusInfoLabel);
 
     connect(mWidgetStack, &QStackedWidget::currentChanged, this, &MapEditor::currentWidgetChanged);

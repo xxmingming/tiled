@@ -297,6 +297,8 @@ QtGuiApplication {
         "newmapdialog.cpp",
         "newmapdialog.h",
         "newmapdialog.ui",
+        "newsfeed.cpp",
+        "newsfeed.h",
         "newtilesetdialog.cpp",
         "newtilesetdialog.h",
         "newtilesetdialog.ui",
