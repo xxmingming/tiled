@@ -57,7 +57,7 @@ WindowsInstallerPackage {
         if (File.exists(Environment.getEnv("PYTHONHOME")))
             defs.push("Python");
 
-        var openSslDir = "C:\\OpenSSL-Win" + bits + "\\bin";
+        var openSslDir = "C:\\OpenSSL-Win" + bits;
         if (File.exists(openSslDir))
             defs.push("OpenSslDir=" + openSslDir);
 
