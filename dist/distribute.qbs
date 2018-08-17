@@ -279,13 +279,13 @@ Product {
 
         prefix: {
             if (qbs.architecture === "x86_64")
-                return "C:/OpenSSL-Win64/bin/"
+                return "C:/OpenSSL-Win64/"
             else
-                return "C:/OpenSSL-Win32/bin/"
+                return "C:/OpenSSL-Win32/"
         }
         files: [
             "libeay32.dll",
-            "libssl32.dll",
+            "ssleay32.dll",
         ]
         qbs.install: true
         qbs.installDir: ""
