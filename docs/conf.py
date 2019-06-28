@@ -102,6 +102,9 @@ html_static_path = ['_static']
 
 def setup(app):
     app.add_stylesheet('css/custom.css')
+    app.add_stylesheet('https://cdn.jsdelivr.net/npm/docsearch.js@2/dist/cdn/docsearch.min.css')
+    app.add_javascript('https://cdn.jsdelivr.net/npm/docsearch.js@2/dist/cdn/docsearch.min.js')
+    app.add_javascript('js/algolia.js')
 
 # Custom sidebar templates, must be a dictionary that maps document names
 # to template names.
