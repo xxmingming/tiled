@@ -40,6 +40,7 @@ class EditableAsset;
 class ScriptedAction;
 class ScriptedMapFormat;
 class ScriptedTool;
+class TilesetEditor;
 
 /**
  * Initial point of access to Tiled functionality from JavaScript.
@@ -57,6 +58,8 @@ class ScriptModule : public QObject
 
     Q_PROPERTY(Tiled::EditableAsset *activeAsset READ activeAsset WRITE setActiveAsset NOTIFY activeAssetChanged)
     Q_PROPERTY(QList<QObject*> openAssets READ openAssets)
+
+    Q_PROPERTY(Tiled::TilesetEditor *tilesetEditor READ tilesetEditor)
 
 public:
     struct MenuItem {
@@ -84,6 +87,8 @@ public:
     bool setActiveAsset(EditableAsset *asset) const;
 
     QList<QObject*> openAssets() const;
+
+    TilesetEditor *tilesetEditor() const;
 
     Q_INVOKABLE Tiled::EditableAsset *open(const QString &fileName) const;
     Q_INVOKABLE bool close(Tiled::EditableAsset *asset) const;
@@ -117,7 +122,7 @@ public slots:
     void log(const QString &text) const;
 
     void warn(const QString &text) const;
-    void error(const QString &text) const;
+    void error(const QString &text, QJSValue activatedCallback) const;
 
 private slots:
     void documentCreated(Document *document);

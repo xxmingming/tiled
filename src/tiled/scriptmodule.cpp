@@ -31,6 +31,7 @@
 #include "scriptedtool.h"
 #include "scriptmanager.h"
 #include "tilesetdocument.h"
+#include "tileseteditor.h"
 
 #include <QAction>
 #include <QCoreApplication>
@@ -139,6 +140,11 @@ QList<QObject *> ScriptModule::openAssets() const
     for (const DocumentPtr &document : documentManager->documents())
         assets.append(document->editable());
     return assets;
+}
+
+TilesetEditor *ScriptModule::tilesetEditor() const
+{
+    return static_cast<TilesetEditor*>(DocumentManager::instance()->editor(Document::TilesetDocumentType));
 }
 
 EditableAsset *ScriptModule::open(const QString &fileName) const
@@ -384,11 +390,18 @@ void ScriptModule::warn(const QString &text) const
     reportIssue(Issue { Issue::Warning, text });
 }
 
-void ScriptModule::error(const QString &text) const
+void ScriptModule::error(const QString &text, QJSValue activatedCallback) const
 {
     mLogger->error(tr("Error: %1").arg(text));
 
-    reportIssue(Issue { Issue::Error, text });
+    Issue issue { Issue::Error, text };
+
+    issue.callback = [=] () mutable {   // 'mutable' needed because of non-const QJSValue::call
+        QJSValue result = activatedCallback.call();
+        ScriptManager::instance().checkError(result);
+    };
+
+    reportIssue(issue);
 }
 
 void ScriptModule::documentCreated(Document *document)

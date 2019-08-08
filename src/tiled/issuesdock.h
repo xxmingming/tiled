@@ -22,6 +22,8 @@
 
 #include <QDockWidget>
 
+#include <functional>
+
 class QListView;
 class QSortFilterProxyModel;
 
@@ -45,6 +47,7 @@ struct Issue
 
     Severity severity = Error;
     QString text;
+    std::function<void()> callback;
 
     bool operator==(const Issue &o) const
     {
@@ -72,6 +75,7 @@ protected:
     void changeEvent(QEvent *e) override;
 
 private:
+    void activated(const QModelIndex &index);
     void retranslateUi();
 
     IssueFilterModel *mProxyModel;

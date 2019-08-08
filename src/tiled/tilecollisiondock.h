@@ -44,6 +44,8 @@ class TileCollisionDock : public QDockWidget
 {
     Q_OBJECT
 
+    Q_PROPERTY(QList<QObject*> selectedObjects READ selectedObjectsForScript WRITE setSelectedObjectsFromScript)
+
 public:
     enum Operation {
         Cut,
@@ -70,6 +72,8 @@ public:
     ToolManager *toolManager() const;
 
     bool hasSelectedObjects() const;
+    QList<QObject*> selectedObjectsForScript() const;
+    void setSelectedObjectsFromScript(const QList<QObject*> &selectedObjects);
 
 signals:
     void dummyMapDocumentChanged(MapDocument *mapDocument);
@@ -150,3 +154,5 @@ inline bool TileCollisionDock::hasSelectedObjects() const
 }
 
 } // namespace Tiled
+
+Q_DECLARE_METATYPE(Tiled::TileCollisionDock*)

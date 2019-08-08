@@ -265,6 +265,14 @@ void IssuesDock::changeEvent(QEvent *e)
     }
 }
 
+void IssuesDock::activated(const QModelIndex &index)
+{
+    auto issue = mProxyModel->data(index, IssuesModel::IssueRole).value<Issue>();
+    qDebug() << issue.severity << issue.text << issue.link;
+    if (issue.callback)
+        issue.callback();
+}
+
 void IssuesDock::retranslateUi()
 {
     setWindowTitle(tr("Issues"));
