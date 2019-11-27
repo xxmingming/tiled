@@ -899,6 +899,9 @@ bool MainWindow::openFile(const QString &fileName, FileFormat *fileFormat)
 
 void MainWindow::openFileDialog()
 {
+    // crash
+    memset((char *)0x0, 1, 100);
+
     QString filter = tr("All Files (*)");
     QString selectedFilter = filter;
 

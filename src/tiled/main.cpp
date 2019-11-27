@@ -37,10 +37,14 @@
 #include "tmxmapformat.h"
 
 #include <QDebug>
+#include <QDir>
 #include <QFileInfo>
 #include <QJsonArray>
 #include <QJsonDocument>
+#include <QStandardPaths>
 #include <QtPlugin>
+
+#include <sentry.h>
 
 #include <memory>
 
@@ -334,6 +338,32 @@ void CommandLineHandler::startNewInstance()
     newInstance = true;
 }
 
+class Sentry
+{
+public:
+    Sentry()
+    {
+        sentry_options_t *options = sentry_options_new();
+        sentry_options_set_dsn(options, "https://6c72ea2c9d024333bae90e40bc1d41e0@sentry.io/1835065");
+
+        const QString configLocation { QStandardPaths::writableLocation(QStandardPaths::AppConfigLocation) };
+        if (!configLocation.isEmpty()) {
+            QString databasePath = QDir{configLocation}.filePath(QStringLiteral("sentry-db"));
+            if (!QFile::exists(databasePath))
+                QDir().mkpath(databasePath);
+
+            sentry_options_set_handler_path(options, "/home/bjorn/projects/tiled/sentry-native/gen_linux/bin/Release/crashpad_handler");
+            sentry_options_set_database_path(options, qPrintable(databasePath));
+        }
+        sentry_init(options);
+    }
+
+    ~Sentry()
+    {
+        sentry_shutdown();
+    }
+};
+
 
 int main(int argc, char *argv[])
 {
@@ -355,6 +385,8 @@ int main(int argc, char *argv[])
 #if QT_VERSION >= QT_VERSION_CHECK(5, 10, 0)
     QCoreApplication::setAttribute(Qt::AA_DisableWindowContextHelpButton);
 #endif
+
+    Sentry sentry;
 
 #ifdef Q_OS_MAC
     QCoreApplication::setAttribute(Qt::AA_DontShowIconsInMenus);
