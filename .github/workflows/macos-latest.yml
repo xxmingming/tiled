@@ -22,7 +22,7 @@ jobs:
         export TILED_VERSION=$(git describe | cut -c 2-)
         qbs build config:release qbs.installPrefix:"" projects.Tiled.version:$TILED_VERSION
     - name: package
-      runs: |
+      run: |
         qbs install --install-root install config:release
         macdeployqt install/Tiled.app -verbose=2
         pushd install
