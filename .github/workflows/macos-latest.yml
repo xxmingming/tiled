@@ -16,5 +16,19 @@ jobs:
     - name: setup qbs
       run: |
         qbs setup-toolchains --detect
+        qbs config defaultProfile xcode
     - name: build
-      run: qbs build profile:xcode
+      run: |
+        export TILED_VERSION=$(git describe | cut -c 2-)
+        qbs build config:release qbs.installPrefix:"" projects.Tiled.version:$TILED_VERSION
+    - name: package
+      runs: |
+        qbs install --install-root install config:release
+        macdeployqt install/Tiled.app -verbose=2
+        pushd install
+        ruby ../dist/macos/fixup-install-names.rb
+        popd
+    - uses: actions/upload-artifact@v1
+      with:
+        name: Tiled.app
+        path: install/Tiled.app
