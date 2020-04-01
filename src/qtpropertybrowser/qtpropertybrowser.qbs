@@ -7,7 +7,7 @@ StaticLibrary {
     Depends { name: "Qt"; submodules: ["widgets"] }
 
     cpp.includePaths: ["src"]
-    cpp.cxxLanguageVersion: "c++14"
+    cpp.cxxLanguageVersion: "c++17"
 
     files: [
         "src/qtbuttonpropertybrowser.cpp",

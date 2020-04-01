@@ -7,7 +7,7 @@ CppApplication {
     Depends { name: "libtiled" }
     Depends { name: "Qt.testlib" }
 
-    cpp.cxxLanguageVersion: "c++14"
+    cpp.cxxLanguageVersion: "c++17"
 
     files: [
         "test_staggeredrenderer.cpp",
