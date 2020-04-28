@@ -309,8 +309,12 @@ bool MapView::event(QEvent *e)
 void MapView::showEvent(QShowEvent *event)
 {
     if (!mViewInitialized) {
-        fitMapInView();
         mViewInitialized = true;
+
+        if (mHasInitialCenterPos)
+            forceCenterOn(mInitialCenterPos);
+        else
+            fitMapInView();
     }
 
     QGraphicsView::showEvent(event);
