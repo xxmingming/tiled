@@ -306,7 +306,7 @@ bool MapView::event(QEvent *e)
     return QGraphicsView::event(e);
 }
 
-void MapView::showEvent(QShowEvent *event)
+void MapView::paintEvent(QPaintEvent *event)
 {
     if (!mViewInitialized) {
         mViewInitialized = true;
@@ -317,7 +317,7 @@ void MapView::showEvent(QShowEvent *event)
             fitMapInView();
     }
 
-    QGraphicsView::showEvent(event);
+    QGraphicsView::paintEvent(event);
 }
 
 void MapView::hideEvent(QHideEvent *event)
