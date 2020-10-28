@@ -181,7 +181,6 @@ jobs:
         export TILED_MSI_VERSION=1.4.${GITHUB_RUN_NUMBER}
         qbs build --all-products config:release projects.Tiled.windowsInstaller:true projects.Tiled.enableZstd:true
         mv release/installer*/Tiled-*.msi .
-        mv release/archive*/Tiled-*.7z .
 
     - name: Upload Tiled installer
       uses: actions/upload-artifact@v2
@@ -192,8 +191,8 @@ jobs:
     - name: Upload Tiled archive
       uses: actions/upload-artifact@v2
       with:
-        name: Tiled-win${{ matrix.arch }}.7z
-        path: Tiled-*.7z
+        name: Tiled-win${{ matrix.arch }}
+        path: release/install-root/*
 
   itch:
     name: Upload to itch.io (${{ matrix.channel }})
@@ -218,10 +217,10 @@ jobs:
             popd
 
         - channel: windows-32bit
-          artifact: Tiled-win32.msi
+          artifact: Tiled-win32
 
         - channel: windows-64bit
-          artifact: Tiled-win64.msi
+          artifact: Tiled-win64
 
     steps:
     - id: download
